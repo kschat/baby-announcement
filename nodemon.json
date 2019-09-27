@@ -1,0 +1,15 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    "src/**",
+    "node_modules/**/node_modules",
+    "assets/graphql/**",
+    "coverage-output/*"
+  ],
+  "verbose": true,
+  "env": {
+    "NODE_ENV": "local"
+  },
+  "ext": "js,json"
+}
