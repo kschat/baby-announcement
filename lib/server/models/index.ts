@@ -45,7 +45,7 @@ export interface QuestionChoice {
 
 export interface QuestionAnswer {
   readonly id: joi.extractType<typeof idSchema>;
-  readonly user: User;
+  readonly userId: User['id'];
   readonly choice: QuestionChoice;
 }
 
@@ -57,6 +57,7 @@ export interface Question {
   readonly answers: readonly QuestionAnswer[];
 }
 
+// TODO add currentQuestion
 export interface Quiz {
   readonly id: string;
   readonly joinCode: joi.extractType<typeof joinCodeSchema>;

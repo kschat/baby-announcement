@@ -16,6 +16,10 @@ export class UserNameTakenError extends AppError {
   public readonly code = 'USER_NAME_TAKEN';
 }
 
+export class UserNotInQuizError extends AppError {
+  public readonly code = 'USER_NOT_IN_QUIZ';
+}
+
 export class UnauthorizedQuizStartError extends AppError {
   public readonly code = 'UNAUTHORIZED_QUIZ_START';
 }
@@ -40,6 +44,26 @@ export class QuizAlreadyFinishedError extends AppError {
   public readonly code = 'QUIZ_ALREADY_FINISHED';
 }
 
+export class QuizNotStartedError extends AppError {
+  public readonly code = 'QUIZ_NOT_STARTED';
+}
+
 export class QuizNotEnoughPlayersError extends AppError {
   public readonly code = 'NOT_ENOUGH_PLAYERS';
+}
+
+export class QuestionNotFoundError extends AppError {
+  public readonly code = 'QUESTION_NOT_FOUND';
+}
+
+export class QuestionNotCurrentError extends AppError {
+  public readonly code = 'QUESTION_NOT_CURRENT';
+}
+
+export class QuestionAlreadyAnsweredError extends AppError {
+  public readonly code = 'QUESTION_ALREADY_ANSWERED';
+}
+
+export class ChoiceInvalidError extends AppError {
+  public readonly code = 'CHOICE_INVALID';
 }

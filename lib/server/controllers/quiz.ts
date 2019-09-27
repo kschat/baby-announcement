@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { ServerRoute } from '@hapi/hapi';
 import joi from '@hapi/joi';
 import 'joi-extract-type';
@@ -39,12 +40,31 @@ export const init = ({ quizService, config }: Options): ServerRoute[] => {
     handler: async (request) => {
       const { id } = request.params;
       const quiz = await quizService.getQuiz(id);
+      // TODO pull logic into function
+      const quizResponse = {
+        id: quiz.id,
+        joinCode: quiz.joinCode,
+        status: quiz.status,
+      };
+
+      if (quiz.status !== 'IN_PROGRESS') {
+        return { data: quizResponse };
+      }
+
+      const currentQuestion = _.find(quiz.questions, { status: 'IN_PROGRESS' });
+      if (!currentQuestion) {
+        throw new Error('Missing current question');
+      }
 
       return {
         data: {
-          id: quiz.id,
-          joinCode: quiz.joinCode,
-          status: quiz.status,
+          ...quizResponse,
+          currentQuestion: {
+            id: currentQuestion.id,
+            status: currentQuestion.status,
+            text: currentQuestion.text,
+            choices: currentQuestion.choices,
+          },
         },
       };
     },
@@ -181,10 +201,75 @@ export const init = ({ quizService, config }: Options): ServerRoute[] => {
     },
   };
 
+  const submitAnswer: ServerRoute = {
+    method: 'PUT',
+    path: '/quiz/{quizId}/question/{questionId}/answer',
+    options: {
+      response: {
+        schema: joi.object().keys({
+          data: quizResponseSchema.required(),
+        }),
+      },
+      validate: {
+        params: joi.object().keys({
+          quizId: idSchema.required(),
+          questionId: idSchema.required(),
+        }),
+        payload: joi.object().keys({
+          data: {
+            choiceId: idSchema.required(),
+          },
+        }),
+      },
+    },
+    handler: async (request) => {
+      // @ts-ignore
+      const userId = request.auth.credentials.id;
+      // @ts-ignore - TODO determine if we can type checked by TS
+      const { choiceId } = request.payload.data as { choiceId: string };
+      const { quizId, questionId } = request.params;
+
+      const quiz = await quizService.answerQuizQuestion({
+        userId,
+        quizId,
+        choiceId,
+        questionId,
+      });
+
+      const quizResponse = {
+        id: quiz.id,
+        joinCode: quiz.joinCode,
+        status: quiz.status,
+      };
+
+      if (quiz.status !== 'IN_PROGRESS') {
+        return { data: quizResponse };
+      }
+
+      const currentQuestion = _.find(quiz.questions, { status: 'IN_PROGRESS' });
+      if (!currentQuestion) {
+        throw new Error('Missing current question');
+      }
+
+      return {
+        data: {
+          ...quizResponse,
+          currentQuestion: {
+            id: currentQuestion.id,
+            status: currentQuestion.status,
+            text: currentQuestion.text,
+            choices: currentQuestion.choices,
+          },
+        },
+      };
+    },
+  };
+
   return [
     getQuiz,
     createQuiz,
     joinQuiz,
     startQuiz,
+    submitAnswer,
   ];
 };

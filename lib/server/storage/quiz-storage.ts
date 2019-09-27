@@ -1,12 +1,15 @@
 import uuid from 'uuid/v4';
 
 import { pushAndReturn } from '../utils/array';
-import { Quiz, QuizStatus, User, Question } from '../models';
+import { Quiz, QuizStatus, User, Question, QuestionStatus, QuestionAnswer } from '../models';
 import { QuizNotFoundError, QuizAlreadyExistsError } from '../errors';
+import _ from 'lodash';
 
 export type QuizStorage = Readonly<ReturnType<typeof init>>;
 
 export interface Options {}
+
+export type UpdateQuestionStatus = Pick<Question, 'id' | 'status'>;
 
 export const init = (_options: Options) => {
   const DATA: Quiz[] = [];
@@ -54,12 +57,52 @@ export const init = (_options: Options) => {
       const [, quizIndex] = await getQuizAndIndex(id);
 
       const existingQuiz = DATA[quizIndex];
-      // @ts-ignore - TODO don't mutate
-      existingQuiz.questions[0].status = 'IN_PROGRESS';
       return DATA[quizIndex] = {
         ...existingQuiz,
         status,
       };
+    },
+
+    updateQuestionStatus: async (quizId: string, questionId: string, status: QuestionStatus): Promise<Question> => {
+      const [quiz] = await getQuizAndIndex(quizId);
+
+      const questionIndex = quiz.questions.findIndex(({ id }) => id === questionId);
+      if (questionIndex === -1) {
+        throw new Error('Question not found!');
+      }
+
+      const existingQuestion = quiz.questions[questionIndex];
+      // @ts-ignore - don't mutate
+      return quiz.questions[questionIndex] = {
+        ...existingQuestion,
+        status,
+      };
+    },
+
+    addAnswer: async (
+      quizId: string, 
+      questionId: string, 
+      answer: Pick<QuestionAnswer, 'choice' | 'userId'>,
+    ): Promise<QuestionAnswer> => {
+      const [quiz] = await getQuizAndIndex(quizId);
+
+      const question = _.find(quiz.questions, { id: questionId });
+      if (!question) {
+        throw new Error('Question not found!');
+      }
+
+      const fullAnswer = {
+        ...answer,
+        id: uuid(),
+      };
+
+      // @ts-ignore
+      question.answers = [
+        ...question.answers,
+        fullAnswer,
+      ];
+
+      return fullAnswer;
     },
 
     addUser: async (id: string, user: User): Promise<Quiz> => {

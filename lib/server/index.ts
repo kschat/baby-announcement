@@ -1,7 +1,7 @@
 import 'source-map-support/register';
+import 'joi-extract-type';
 
 import { Server, Request } from '@hapi/hapi';
-import 'joi-extract-type';
 
 import { init as initQuizRoute } from './controllers/quiz';
 import { init as initQuizService } from './quiz';
@@ -15,7 +15,7 @@ import { errorMapperExtension } from './extensions/error-response-mapper';
 // POST /quiz/{joinCode}/join -- adds a user to a quiz
 // POST /quiz/{id}/start -- starts the quiz, only the person who initiated the quiz can do this
 // GET /quiz/{id} -- polling/SSE endpoint to determine if the quiz has started. Also used to get the next question when the quiz has started.
-// PUT /quiz/{id}/answer/{answer_id} -- sends the answer for a question for a user (using auth headers to send the user ID)
+// PUT /quiz/{quizId}/question/{questionId}/answer -- sends the answer for a question for a user 
 
 const CONFIG = {
   auth: {
