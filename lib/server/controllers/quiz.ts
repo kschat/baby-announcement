@@ -24,7 +24,7 @@ export interface Options {
 export const init = ({ quizService, config }: Options): ServerRoute[] => {
   const getQuiz: ServerRoute = {
     method: 'GET',
-    path: '/quiz/{id}',
+    path: '/api/quiz/{id}',
     options: {
       response: {
         schema: joi.object().keys({
@@ -72,7 +72,7 @@ export const init = ({ quizService, config }: Options): ServerRoute[] => {
 
   const createQuiz: ServerRoute = {
     method: 'POST',
-    path: '/quiz',
+    path: '/api/quiz',
     options: {
       auth: false,
       validate: {
@@ -115,7 +115,7 @@ export const init = ({ quizService, config }: Options): ServerRoute[] => {
 
   const joinQuiz: ServerRoute = {
     method: 'POST',
-    path: '/quiz/{joinCode}/join',
+    path: '/api/quiz/{joinCode}/join',
     options: {
       auth: false,
       validate: {
@@ -164,7 +164,7 @@ export const init = ({ quizService, config }: Options): ServerRoute[] => {
 
   const startQuiz: ServerRoute = {
     method: 'POST',
-    path: '/quiz/{id}/start',
+    path: '/api/quiz/{id}/start',
     options: {
       response: {
         schema: joi.object().keys({
@@ -203,7 +203,7 @@ export const init = ({ quizService, config }: Options): ServerRoute[] => {
 
   const submitAnswer: ServerRoute = {
     method: 'PUT',
-    path: '/quiz/{quizId}/question/{questionId}/answer',
+    path: '/api/quiz/{quizId}/question/{questionId}/answer',
     options: {
       response: {
         schema: joi.object().keys({
