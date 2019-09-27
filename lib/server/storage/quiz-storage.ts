@@ -1,9 +1,21 @@
+import _ from 'lodash';
 import uuid from 'uuid/v4';
 
 import { pushAndReturn } from '../utils/array';
-import { Quiz, QuizStatus, User, Question, QuestionStatus, QuestionAnswer } from '../models';
-import { QuizNotFoundError, QuizAlreadyExistsError } from '../errors';
-import _ from 'lodash';
+import {
+  Quiz,
+  QuizStatus,
+  User,
+  Question,
+  QuestionStatus,
+  QuestionAnswer,
+} from '../models';
+
+import {
+  QuizNotFoundError,
+  QuizAlreadyExistsError,
+  QuestionNotFoundError,
+} from '../errors';
 
 export type QuizStorage = Readonly<ReturnType<typeof init>>;
 
@@ -68,7 +80,7 @@ export const init = (_options: Options) => {
 
       const questionIndex = quiz.questions.findIndex(({ id }) => id === questionId);
       if (questionIndex === -1) {
-        throw new Error('Question not found!');
+        throw new QuestionNotFoundError(`Question id "${questionId}" not found`);
       }
 
       const existingQuestion = quiz.questions[questionIndex];
@@ -80,15 +92,15 @@ export const init = (_options: Options) => {
     },
 
     addAnswer: async (
-      quizId: string, 
-      questionId: string, 
+      quizId: string,
+      questionId: string,
       answer: Pick<QuestionAnswer, 'choice' | 'userId'>,
     ): Promise<QuestionAnswer> => {
       const [quiz] = await getQuizAndIndex(quizId);
 
       const question = _.find(quiz.questions, { id: questionId });
       if (!question) {
-        throw new Error('Question not found!');
+        throw new QuestionNotFoundError(`Question id "${questionId}" not found`);
       }
 
       const fullAnswer = {
