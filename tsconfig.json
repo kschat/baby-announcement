@@ -4,6 +4,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "dist",
+    "rootDir": "lib",
     "strict": true,
     "alwaysStrict": true,
     "forceConsistentCasingInFileNames": true,

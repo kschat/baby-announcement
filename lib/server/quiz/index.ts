@@ -60,7 +60,7 @@ const QUESTIONS: Question[] = [
   {
     id: '413b4b1b-0ab3-4dc6-b899-d68aa72a1ff9',
     status: 'NOT_ASKED',
-    text: 'Is Trump retarted?',
+    text: 'Question?',
     choices: [
       {
         id: '2297866d-6a9c-48e5-a192-9be92a487643',
@@ -148,8 +148,8 @@ export const init = ({ quizStorage, userStorage }: Options) => {
       }
 
       await quizStorage.updateQuestionStatus(
-        quizId, 
-        quiz.questions[0].id, 
+        quizId,
+        quiz.questions[0].id,
         'IN_PROGRESS',
       );
 
@@ -218,8 +218,8 @@ export const init = ({ quizStorage, userStorage }: Options) => {
       }
 
       await quizStorage.updateQuestionStatus(
-        updatedQuiz.id, 
-        currentQuestion.id, 
+        updatedQuiz.id,
+        currentQuestion.id,
         'FINISHED',
       );
 
@@ -229,8 +229,8 @@ export const init = ({ quizStorage, userStorage }: Options) => {
       }
 
       await quizStorage.updateQuestionStatus(
-        updatedQuiz.id, 
-        nextQuestion.id, 
+        updatedQuiz.id,
+        nextQuestion.id,
         'IN_PROGRESS',
       );
 
