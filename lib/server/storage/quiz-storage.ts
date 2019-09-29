@@ -16,6 +16,7 @@ import {
   QuizAlreadyExistsError,
   QuestionNotFoundError,
 } from '../errors';
+import { QUESTIONS } from '../quiz';
 
 export type QuizStorage = Readonly<ReturnType<typeof init>>;
 
@@ -23,8 +24,32 @@ export interface Options {}
 
 export type UpdateQuestionStatus = Pick<Question, 'id' | 'status'>;
 
+const FIRST_QUESTION: Question = {
+  ...QUESTIONS[0],
+  status: 'IN_PROGRESS',
+};
+
 export const init = (_options: Options) => {
-  const DATA: Quiz[] = [];
+  const DATA: Quiz[] = [
+    {
+      id: '413b4b1b-0ab3-4dc6-b899-d68aa72a1ff0',
+      joinCode: 'UkQdLpvp',
+      status: 'IN_PROGRESS',
+      players: [
+        {
+          id: '000b4b1b-0ab3-4dc6-b899-d68aa72a1ff0',
+          name: 'flaps',
+          status: 'ADMIN',
+        },
+        {
+          id: '100b4b1b-0ab3-4dc6-b899-d68aa72a1ff0',
+          name: 'other',
+          status: 'PLAYER',
+        },
+      ],
+      questions: [FIRST_QUESTION, QUESTIONS[1]],
+    }
+  ];
 
   const getQuizAndIndex = async (id: string): Promise<[Quiz, number]> => {
     const index = DATA.findIndex((quiz) => quiz.id === id);

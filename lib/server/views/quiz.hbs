@@ -1,0 +1,62 @@
+<style>
+  /* TODO remove hack */
+  .main-container.with-header {
+    padding-top: 98px;
+  }
+</style>
+
+<header class="row fixed-top pt-3 bg-light">
+  <div class="col">
+    <div class="form-group text-center">
+      <h5 class="text-capitalize">{{quizTitle}}</h5>
+      <small class="form-text pt-1">Answer the questions and try to win!</small>
+    </div>
+  </div>
+</header>
+
+<div class="row">
+  <div class="col">
+    <ol class="question-list">
+      {{#each quiz.questions}}
+        <li class="question-container">
+          {{#if-equal this.status "NOT_ASKED"}}
+            <p class="text-muted font-weight-bold">Question {{math @index '+' 1}}</p>
+          {{/if-equal}}
+
+          {{#if-equal this.status "FINISHED"}}
+            <p class="text-muted font-weight-bold">Question {{math @index '+' 1}}</p>
+          {{/if-equal}}
+
+          {{#if-equal this.status "IN_PROGRESS"}}
+            <p class="d-inline font-weight-bold">{{this.text}}</p>
+
+            <form>
+              <div class="form-group pl-3 ml-1 pt-3">
+                {{#each this.choices}}
+                  <div class="custom-control custom-radio pb-3">
+                    <input 
+                      type="radio" 
+                      id="optionInput{{@index}}" 
+                      class="custom-control-input" 
+                      name="question{{@../index}}" value="yes" />
+
+                    <label class="custom-control-label text-muted" for="optionInput{{@index}}">{{this.text}}</label>
+                  </div>
+                {{/each}}
+              </div>
+            </form>
+          {{/if-equal}}
+        </li>
+      {{/each}}
+    </ol>
+  </div>
+</div>
+
+<nav class="navbar navbar-light fixed-bottom bg-light">
+  <div class="container justify-content-center">
+    <a href="#" class="btn btn-info btn-block d-flex justify-content-between">
+      <span>Next question</span>
+      <span class="oi oi-chevron-right align-middle"></span>
+    </a>
+  </div>
+</nav>

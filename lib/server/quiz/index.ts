@@ -56,35 +56,63 @@ export type QuizService = Readonly<ReturnType<typeof init>>;
 const MAX_PLAYERS = 8;
 
 // TODO add validation that this is not empty - Try using tuples for array
-const QUESTIONS: Question[] = [
+export const QUESTIONS: Question[] = [
   {
     id: '413b4b1b-0ab3-4dc6-b899-d68aa72a1ff9',
     status: 'NOT_ASKED',
-    text: 'Question?',
+    text: 'Who was the worst president in history?',
     choices: [
       {
         id: '2297866d-6a9c-48e5-a192-9be92a487643',
-        text: 'Yes',
+        text: 'Trump',
         isCorrect: true,
       },
       {
         id: 'cc72a07a-716f-401e-8af0-20cd360af078',
-        text: 'Yes',
+        text: 'Trump',
         isCorrect: true,
       },
       {
         id: '976030d0-def4-4290-b1e6-518f5dc0ffe2',
-        text: 'Yes',
+        text: 'Trump',
         isCorrect: true,
       },
       {
         id: 'a2222bb8-9abc-4ee3-ba31-7dc4fbb7fd08',
+        text: 'Trump',
+        isCorrect: true,
+      }
+    ],
+    answers: [],
+  },
+  {
+    id: '413b4b1b-0ab3-4dc6-b899-d68aa72a1000',
+    status: 'NOT_ASKED',
+    text: 'Question?',
+    choices: [
+      {
+        id: '2297866d-6a9c-48e5-a192-9be92a487644',
+        text: 'Yes',
+        isCorrect: true,
+      },
+      {
+        id: 'cc72a07a-716f-401e-8af0-20cd360af075',
+        text: 'Yes',
+        isCorrect: true,
+      },
+      {
+        id: '976030d0-def4-4290-b1e6-518f5dc0ffe6',
+        text: 'Yes',
+        isCorrect: true,
+      },
+      {
+        id: 'a2222bb8-9abc-4ee3-ba31-7dc4fbb7fd07',
         text: 'Yes',
         isCorrect: true,
       }
     ],
     answers: [],
-  }
+  },
 ];
 
 export const init = ({ quizStorage, userStorage }: Options) => {

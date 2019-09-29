@@ -1,10 +1,14 @@
 import 'source-map-support/register';
 import 'joi-extract-type';
 
+import joi from '@hapi/joi';
+
+import { join as pJoin } from 'path';
 import { Server, Request } from '@hapi/hapi';
 import inert from '@hapi/inert';
+import vision from '@hapi/vision';
 import hapiAuthJwt2 from 'hapi-auth-jwt2';
-import { join as pJoin } from 'path';
+import handlebars from 'handlebars';
 
 import { init as initQuizRoute } from './controllers/quiz';
 import { init as initQuizService } from './quiz';
@@ -12,6 +16,7 @@ import { init as initQuizStorage } from './storage/quiz-storage';
 import { init as initUserStorage } from './storage/user-storage';
 import { validateUser } from './auth';
 import { errorMapperExtension } from './extensions/error-response-mapper';
+import _ from 'lodash';
 
 // required routes:
 // POST /quiz -- creates the quiz room and returns a code for others to join. Does not start the quiz
@@ -60,9 +65,19 @@ export type Config = Readonly<typeof CONFIG>;
   });
 
   await server.register([
+    vision,
     inert,
     hapiAuthJwt2,
   ]);
+
+  server.views({
+    engines: { hbs: handlebars },
+    relativeTo: __dirname,
+    path: 'views',
+    layoutPath: 'views/layouts',
+    layout: 'main',
+    helpersPath: 'views/helpers',
+  });
 
   server.auth.strategy('jwt', 'jwt', {
     key: CONFIG.auth.secret,
@@ -99,7 +114,10 @@ export type Config = Readonly<typeof CONFIG>;
       auth: false,
     },
     handler: {
-      file: './views/index.html',
+      view: {
+        template: 'join',
+        context: {},
+      },
     },
   });
 
@@ -110,18 +128,43 @@ export type Config = Readonly<typeof CONFIG>;
       auth: false,
     },
     handler: {
-      file: './views/create.html',
+      view: {
+        template: 'create',
+        context: {},
+      },
     },
   });
 
   server.route({
     method: 'GET',
-    path: '/quiz',
+    path: '/quiz/{quizId}',
     options: {
       auth: false,
+      validate: {
+        params: joi.object().keys({
+          quizId: joi.string().required(),
+        }),
+      },
     },
-    handler: {
-      file: './views/quiz.html',
+    handler: async (request, h) => {
+      const { quizId } = request.params;
+      const quiz = await quizService.getQuiz(quizId);
+
+      const adminPlayer = _.find(quiz.players, { status: 'ADMIN' });
+      if (!adminPlayer) {
+        throw new Error('Unexpected error');
+      }
+
+     const quizTitle = `${adminPlayer.name}'s Quiz`;
+
+     // quiz.questions[0].choices[0].
+
+      return h.view('quiz', {
+        showHeader: true,
+        showFooter: true,
+        quizTitle,
+        quiz,
+      });
     },
   });
 
