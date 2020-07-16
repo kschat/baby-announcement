@@ -33,7 +33,7 @@ export type Config = Readonly<typeof CONFIG>;
   const quizService = initQuizService({ quizStorage, userStorage });
 
   const server = new Server({
-    port: 8080,
+    port: process.env.PORT || 8080,
     router: {
       stripTrailingSlash: true,
     },

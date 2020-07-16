@@ -1,6 +1,11 @@
 {
   "name": "baby-announcment",
+  "license": "MIT",
+  "engines": {
+    "node": "14.2.x"
+  },
   "scripts": {
+    "start": "node ./dist/server/index.js",
     "build": "run-s build:ts copy-static",
     "build:ts:server": "tsc --project tsconfig.json",
     "build:ts:client": "webpack",
@@ -27,7 +32,6 @@
     "uuid": "3.3.3"
   },
   "devDependencies": {
-    "@types/dom-mediacapture-record": "1.0.7",
     "@types/handlebars": "4.1.0",
     "@types/hapi__boom": "7.4.1",
     "@types/hapi__hapi": "18.2.5",
