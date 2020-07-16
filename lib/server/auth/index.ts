@@ -1,26 +1,21 @@
 import jwt from 'jsonwebtoken';
 
-import { AuthUser } from '../models';
+import { User } from '../models';
 import { UserStorage } from '../storage/user-storage';
 
 export interface CreateOptions {
-  readonly user: AuthUser;
+  readonly user: User;
   readonly secret: string;
   readonly algorithm: string;
 }
 
 export const createToken = ({ user, secret, algorithm }: CreateOptions): string => {
-  const authUser = {
-    id: user.id,
-    name: user.name
-  };
-
-  return jwt.sign(authUser, secret, {
+  return jwt.sign(user, secret, {
     algorithm,
   });
 };
 
-export const validateUser = (userStorage: UserStorage) => async (user: AuthUser) => {
+export const validateUser = (userStorage: UserStorage) => async (user: User) => {
   const foundUser = await userStorage.getById(user.id).catch(() => false);
   if (!foundUser) {
     return { isValid: false };

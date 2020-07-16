@@ -1,46 +1,119 @@
 <style>
+  #main-navbar {
+    display: none !important;
+  }
+
   /* TODO remove hack */
   .main-container.with-header {
     padding-top: 98px;
   }
+
+  /* TODO remove hack */
+  .main-container {
+    display: block;
+  }
+
+  .list-group.list-group-horizontal-scroll {
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+  }
+
+  .list-group.list-group-horizontal-scroll > .list-group-item {
+    display: inline-block;
+    float: none;
+  }
 </style>
 
-<header class="row fixed-top pt-3 bg-light">
+<header id="quiz-header" class="row fixed-top pt-3 bg-light d-none">
   <div class="col">
-    <div class="form-group text-center">
+    <div class="text-center">
       <h5 class="text-capitalize">{{quizTitle}}</h5>
-      <small class="form-text pt-1">Answer the questions and try to win!</small>
+      <small id="header-subtext" class="form-text pt-1">
+        {{#if-equal quiz.status "IN_PROGRESS"}}
+          Answer the questions and try to win!
+        {{/if-equal}}
+
+        {{#if-equal quiz.status "INITIALIZED"}}
+          Invite players by giving them the code below
+        {{/if-equal}}
+      </small>
+
+      <h4 id="join-code" class="pt-2">
+        {{#if-equal quiz.status "INITIALIZED"}}
+          {{quiz.joinCode}}
+        {{/if-equal}}
+      </h3>
     </div>
   </div>
 </header>
 
-<div class="row">
+<!--TODO center-->
+<div id="quiz-spinner" class="text-center">
+  <div class="spinner-grow" role="status" style="width: 3rem; height: 3rem;">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+
+<div id="question-list-container" class="row d-none" data-initial-status="{{quiz.status}}" data-quiz-id="{{quiz.id}}">
   <div class="col">
     <ol class="question-list">
       {{#each quiz.questions}}
         <li class="question-container">
           {{#if-equal this.status "NOT_ASKED"}}
             <p class="text-muted font-weight-bold">Question {{math @index '+' 1}}</p>
+
+            <form id="question-form-{{this.id}}" class="question-form d-none">
+              <div class="form-group pl-3 ml-1 pt-3">
+                {{#each this.choices}}
+                  <div class="custom-control custom-radio pb-3">
+                    <input
+                      type="radio"
+                      id="option-input--{{@../index}}-{{@index}}"
+                      class="custom-control-input"
+                      name="question{{@../index}}" value="{{this.id}}" />
+
+                    <label class="custom-control-label text-muted" for="option-input--{{@../index}}-{{@index}}">{{this.text}}</label>
+                  </div>
+                {{/each}}
+              </div>
+            </form>
           {{/if-equal}}
 
           {{#if-equal this.status "FINISHED"}}
             <p class="text-muted font-weight-bold">Question {{math @index '+' 1}}</p>
+
+            <form id="question-form-{{this.id}}" class="question-form d-none">
+              <div class="form-group pl-3 ml-1 pt-3">
+                {{#each this.choices}}
+                  <div class="custom-control custom-radio pb-3">
+                    <input
+                      type="radio"
+                      id="option-input--{{@../index}}-{{@index}}"
+                      class="custom-control-input"
+                      name="question{{@../index}}" value="{{this.id}}" />
+
+                    <label class="custom-control-label text-muted" for="option-input--{{@../index}}-{{@index}}">{{this.text}}</label>
+                  </div>
+                {{/each}}
+              </div>
+            </form>
           {{/if-equal}}
 
           {{#if-equal this.status "IN_PROGRESS"}}
             <p class="d-inline font-weight-bold">{{this.text}}</p>
 
-            <form>
+            <form id="question-form-{{this.id}}" class="question-form active-question-form">
               <div class="form-group pl-3 ml-1 pt-3">
                 {{#each this.choices}}
                   <div class="custom-control custom-radio pb-3">
-                    <input 
-                      type="radio" 
-                      id="optionInput{{@index}}" 
-                      class="custom-control-input" 
-                      name="question{{@../index}}" value="yes" />
+                    <input
+                      type="radio"
+                      id="option-input--{{@../index}}-{{@index}}"
+                      class="custom-control-input"
+                      name="question{{@../index}}" value="{{this.id}}" />
 
-                    <label class="custom-control-label text-muted" for="optionInput{{@index}}">{{this.text}}</label>
+                    <label class="custom-control-label text-muted" for="option-input--{{@../index}}-{{@index}}">{{this.text}}</label>
                   </div>
                 {{/each}}
               </div>
@@ -52,11 +125,33 @@
   </div>
 </div>
 
-<nav class="navbar navbar-light fixed-bottom bg-light">
-  <div class="container justify-content-center">
-    <a href="#" class="btn btn-info btn-block d-flex justify-content-between">
-      <span>Next question</span>
-      <span class="oi oi-chevron-right align-middle"></span>
-    </a>
+<div id="finish-screen" class="text-center d-none">
+  <h1>KYLIE IS PREGNANT!</h1>
+</div>
+
+<nav id="bottom-nav" class="navbar navbar-light fixed-bottom bg-light p-0 d-none">
+  <div class="container justify-content-center p-0">
+    <ul id="player-list" class="list-group list-group-horizontal list-group-horizontal-scroll rounded-0">
+      {{#each quiz.players}}
+        <li
+          id="player-item-{{@index}}"
+          class="list-group-item text-center flex-fill rounded-0"
+          data-id="{{this.id}}">
+          {{this.name}}
+        </li>
+      {{/each}}
+    </ul>
+
+    <button id="action-button" type="button" class="btn btn-info btn-block quiz-nav-btn pt-3 pb-3" disabled>
+      <span></span>
+      {{#if-equal quiz.status "INITIALIZED"}}
+        <span id="action-button-text">Start Quiz</span>
+      {{/if-equal}}
+
+      {{#if-equal quiz.status "IN_PROGRESS"}}
+        <span id="action-button-text">Submit Answer</span>
+      {{/if-equal}}
+      <span class="oi oi-chevron-right"></span>
+    </button>
   </div>
 </nav>

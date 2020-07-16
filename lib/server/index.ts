@@ -18,13 +18,6 @@ import { validateUser } from './auth';
 import { errorMapperExtension } from './extensions/error-response-mapper';
 import _ from 'lodash';
 
-// required routes:
-// POST /quiz -- creates the quiz room and returns a code for others to join. Does not start the quiz
-// POST /quiz/{joinCode}/join -- adds a user to a quiz
-// POST /quiz/{id}/start -- starts the quiz, only the person who initiated the quiz can do this
-// GET /quiz/{id} -- polling/SSE endpoint to determine if the quiz has started. Also used to get the next question when the quiz has started.
-// PUT /quiz/{quizId}/question/{questionId}/answer -- sends the answer for a question for a user
-
 const CONFIG = {
   auth: {
     algorithm: 'HS256',
@@ -84,7 +77,7 @@ export type Config = Readonly<typeof CONFIG>;
     verifyOptions: {
       algorithms: [CONFIG.auth.algorithm],
     },
-   validate: validateUser(userStorage),
+    validate: validateUser(userStorage),
     responseFunc: (request: Request) => {
       // @ts-ignore
       request.response.header('Authorization', request.auth.artifacts);
@@ -155,9 +148,7 @@ export type Config = Readonly<typeof CONFIG>;
         throw new Error('Unexpected error');
       }
 
-     const quizTitle = `${adminPlayer.name}'s Quiz`;
-
-     // quiz.questions[0].choices[0].
+      const quizTitle = `${adminPlayer.name}'s Quiz`;
 
       return h.view('quiz', {
         showHeader: true,

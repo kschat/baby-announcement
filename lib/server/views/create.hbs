@@ -1,14 +1,23 @@
 <div class="container align-self-center">
   <div class="row">
     <div class="col">
-      <form>
+      <form id="create-quiz-form">
         <div class="form-group">
           <h4 class="text-center">Create a Quiz</h4>
         </div>
 
         <div class="form-group">
-          <input type="text" class="form-control" id="nickname-input" placeholder="Nickname"
-            aria-describedby="nickname-help">
+          <div id="create-quiz-error-text" class="alert alert-danger d-none" role="alert">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <input
+            type="text"
+            id="nickname-input"
+            class="form-control"
+            placeholder="Nickname"
+            aria-describedby="nickname-help" />
 
           <small id="nickname-help" class="form-text text-muted pt-1">
             Doesn't have to be your real name, go wild!
@@ -21,7 +30,10 @@
           </div>
 
           <div class="col text-right">
-            <button type="submit" class="btn btn-info">Create</button>
+            <button type="button" id="create-quiz-button" class="btn btn-info">
+              <span id="create-quiz-button-spinner" class="spinner-grow spinner-grow-sm d-none" role="status" aria-hidden="true"></span>
+              Create
+            </button>
           </div>
         </div>
       </form>

@@ -2,7 +2,8 @@
   "restartable": "rs",
   "ignore": [
     ".git",
-    "src/**",
+    "lib/**",
+    "dist/client/**/*",
     "node_modules/**/node_modules"
   ],
   "verbose": true,

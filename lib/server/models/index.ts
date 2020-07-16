@@ -32,15 +32,9 @@ export interface User {
   readonly name: joi.extractType<typeof userNameSchema>;
 }
 
-export interface AuthUser {
-  readonly id: string;
-  readonly name: string;
-}
-
 export interface QuestionChoice {
   readonly id: joi.extractType<typeof idSchema>;
   readonly text: string;
-  readonly isCorrect: boolean;
 }
 
 export interface QuestionAnswer {
@@ -85,7 +79,6 @@ export const quizSchema = joi.object().keys({
 export const choiceResponseSchema = joi.object().keys({
   id: idSchema.required(),
   text: joi.string().required(),
-  isCorrect: joi.boolean().required(),
 });
 
 export const questionResponseSchema = joi.object().keys({

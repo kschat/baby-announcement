@@ -2,7 +2,7 @@ export abstract class AppError extends Error {
   public abstract readonly code: string;
 
   constructor(message: string | Error = '') {
-    super(typeof message !== 'string' ? message.message : message)
+    super(typeof message !== 'string' ? message.message : message);
     Error.captureStackTrace(this, this.constructor);
     this.name = this.constructor.name;
   }

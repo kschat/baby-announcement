@@ -18,20 +18,21 @@
       crossorigin="anonymous" />
 
     <link rel="stylesheet" href="/static/css/index.css">
+    <script src="/static/js/bundle.js" async></script>
 
     <title>Quiz Game!</title>
   </head>
 
   <body>
     {{#if showHeader}}
-      <nav class="navbar navbar-light fixed-top bg-light">
+      <nav id="main-navbar" class="navbar navbar-light fixed-top bg-light">
         <div class="container">
           <span class="navbar-brand mb-0 h1">Quiz Game</span>
         </div>
       </nav>
     {{/if}}
 
-    <div class="container main-container bg-light{{#if showHeader}} with-header{{/if}}{{#if showFooter}} with-footer{{/if}}">
+    <div id="main-container" class="container main-container bg-light{{#if showHeader}} with-header{{/if}}{{#if showFooter}} with-footer{{/if}}">
       {{{ content }}}
     </div>
   </body>

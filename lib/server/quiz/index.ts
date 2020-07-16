@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import uuid from 'uuid/v4';
 
 import { QuizStorage } from '../storage/quiz-storage';
 import { UserStorage } from '../storage/user-storage';
@@ -55,60 +56,75 @@ export type QuizService = Readonly<ReturnType<typeof init>>;
 
 const MAX_PLAYERS = 8;
 
-// TODO add validation that this is not empty - Try using tuples for array
 export const QUESTIONS: Question[] = [
   {
-    id: '413b4b1b-0ab3-4dc6-b899-d68aa72a1ff9',
+    id: uuid(),
     status: 'NOT_ASKED',
     text: 'Who was the worst president in history?',
     choices: [
       {
-        id: '2297866d-6a9c-48e5-a192-9be92a487643',
+        id: uuid(),
         text: 'Trump',
-        isCorrect: true,
       },
       {
-        id: 'cc72a07a-716f-401e-8af0-20cd360af078',
+        id: uuid(),
         text: 'Trump',
-        isCorrect: true,
       },
       {
-        id: '976030d0-def4-4290-b1e6-518f5dc0ffe2',
+        id: uuid(),
         text: 'Trump',
-        isCorrect: true,
       },
       {
-        id: 'a2222bb8-9abc-4ee3-ba31-7dc4fbb7fd08',
+        id: uuid(),
         text: 'Trump',
-        isCorrect: true,
       }
     ],
     answers: [],
   },
   {
-    id: '413b4b1b-0ab3-4dc6-b899-d68aa72a1000',
+    id: uuid(),
     status: 'NOT_ASKED',
-    text: 'Question?',
+    text: 'How many times has Dad shit his pants?',
     choices: [
       {
-        id: '2297866d-6a9c-48e5-a192-9be92a487644',
-        text: 'Yes',
-        isCorrect: true,
+        id: uuid(),
+        text: '100',
       },
       {
-        id: 'cc72a07a-716f-401e-8af0-20cd360af075',
-        text: 'Yes',
-        isCorrect: true,
+        id: uuid(),
+        text: '1,000',
       },
       {
-        id: '976030d0-def4-4290-b1e6-518f5dc0ffe6',
-        text: 'Yes',
-        isCorrect: true,
+        id: uuid(),
+        text: '2,134',
       },
       {
-        id: 'a2222bb8-9abc-4ee3-ba31-7dc4fbb7fd07',
+        id: uuid(),
         text: 'Yes',
-        isCorrect: true,
+      }
+    ],
+    answers: [],
+  },
+  {
+    id: uuid(),
+    status: 'NOT_ASKED',
+    text: 'Does Casey have to study?',
+    choices: [
+      {
+        id: uuid(),
+        text: 'Is water wet?',
+      },
+      {
+        id: uuid(),
+        text: 'Do bears shit in the woods?',
+      },
+      {
+        id: uuid(),
+        text: `I don't have time to answer this, I have to study`,
+      },
+      {
+        id: uuid(),
+        text: 'Yes',
       }
     ],
     answers: [],
@@ -117,7 +133,6 @@ export const QUESTIONS: Question[] = [
 
 export const init = ({ quizStorage, userStorage }: Options) => {
   return {
-    // TODO update to return questions
     getQuiz: async (quizId: string): Promise<Quiz> => {
       return quizStorage.getById(quizId);
     },
@@ -126,7 +141,7 @@ export const init = ({ quizStorage, userStorage }: Options) => {
       const user = await userStorage.create(userName, 'ADMIN');
       return {
         user,
-        quiz: await quizStorage.create(joinCode, user, QUESTIONS),
+        quiz: await quizStorage.create(joinCode, user, _.cloneDeep(QUESTIONS)),
       };
     },
 

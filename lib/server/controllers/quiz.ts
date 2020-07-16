@@ -27,6 +27,7 @@ export const init = ({ quizService, config }: Options): ServerRoute[] => {
     path: '/api/quiz/{id}',
     options: {
       response: {
+        failAction: 'log',
         schema: joi.object().keys({
           data: quizResponseSchema.required(),
         }),
@@ -40,11 +41,11 @@ export const init = ({ quizService, config }: Options): ServerRoute[] => {
     handler: async (request) => {
       const { id } = request.params;
       const quiz = await quizService.getQuiz(id);
-      // TODO pull logic into function
       const quizResponse = {
         id: quiz.id,
         joinCode: quiz.joinCode,
         status: quiz.status,
+        players: quiz.players,
       };
 
       if (quiz.status !== 'IN_PROGRESS') {
@@ -70,6 +71,7 @@ export const init = ({ quizService, config }: Options): ServerRoute[] => {
     },
   };
 
+
   const createQuiz: ServerRoute = {
     method: 'POST',
     path: '/api/quiz',
@@ -92,7 +94,7 @@ export const init = ({ quizService, config }: Options): ServerRoute[] => {
       const { quiz, user } = await quizService.createQuiz({
         joinCode: shortId(),
         // @ts-ignore - figure out how to have type saftey with payload
-        userName: request.payload.userName,
+        userName: request.payload.data.userName,
       });
 
       const response = h.response({

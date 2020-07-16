@@ -1,11 +1,15 @@
 {
   "name": "baby-announcment",
   "scripts": {
-    "build": "tsc",
-    "watch:ts": "tsc --watch",
-    "watch:static": "chokidar 'lib/client/**/*.{html,js,css}' 'lib/server/views/**/*.hbs' -c 'npm run copy-static'",
-    "watch": "run-p watch:*",
-    "copy-static": "copyfiles -u 1 'lib/client/**/*.{html,js,css}' 'lib/server/views/**/*.hbs' dist"
+    "build": "run-s build:ts copy-static",
+    "build:ts:server": "tsc --project tsconfig.json",
+    "build:ts:client": "webpack",
+    "build:ts": "run-s -c build:ts:*",
+    "watch:ts:server": "tsc --project tsconfig.json --watch",
+    "watch:ts:client": "webpack --watch",
+    "watch:static": "chokidar 'lib/client/**/*.{html,css}' 'lib/server/views/**/*.hbs' -c 'npm run copy-static'",
+    "watch": "run-p -c watch:ts:* watch:static",
+    "copy-static": "copyfiles -u 1 'lib/client/**/*.{html,css}' 'lib/server/views/**/*.hbs' dist"
   },
   "dependencies": {
     "@hapi/boom": "7.4.3",
@@ -38,6 +42,9 @@
     "copyfiles": "2.1.1",
     "nodemon": "1.19.2",
     "npm-run-all": "4.1.5",
-    "typescript": "3.6.3"
+    "ts-loader": "6.2.0",
+    "typescript": "3.7.5",
+    "webpack": "4.41.0",
+    "webpack-cli": "3.3.9"
   }
 }
