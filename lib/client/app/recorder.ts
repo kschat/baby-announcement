@@ -55,6 +55,10 @@ declare class MediaRecorder extends EventTarget {
 }
 
 const getSupportedMimeType = () => {
+  if (!MediaRecorder.isTypeSupported) {
+    return 'video/webm';
+  }
+
   if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')) {
     return 'video/webm;codecs=vp9,opus';
   }
