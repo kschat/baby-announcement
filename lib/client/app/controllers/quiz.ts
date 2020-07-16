@@ -2,6 +2,7 @@ import { QuizView } from '../views/quiz';
 import { Quiz, User, QuizState } from '../models';
 import { createIntervalTimer } from '../utils/interval-timer';
 import { getQuizById, startQuiz, submitAnswer } from '../api/quiz';
+import { createRecorder } from '../recorder';
 
 type PollQuizOptions = {
   readonly id: string;
@@ -48,12 +49,15 @@ export const quizControllerInit = async ({ quizView }: Options) => {
   let state: QuizState = {
     user,
     quiz: initQuiz,
+    recording: false,
     activeQuestion: {
       id: initQuiz.currentQuestion?.id ?? '',
       answered: false,
       selected: false,
     },
   };
+
+  const recorder = createRecorder();
 
   pollQuiz({
     id: quizView.quizId,
@@ -99,6 +103,11 @@ export const quizControllerInit = async ({ quizView }: Options) => {
             quizView.resetQuizScreen(state.activeQuestion.selected);
           }
 
+          if (!state.recording) {
+            state.recording = true;
+            await recorder.start();
+          }
+
           return;
 
         case 'FINISHED':
@@ -125,7 +134,7 @@ export const quizControllerInit = async ({ quizView }: Options) => {
 
     if (quiz.status === 'IN_PROGRESS') {
       const choiceId = quizView.getSelectedAnswer();
-      const questionId = quiz.currentQuestion && quiz.currentQuestion.id;
+      const questionId = quiz.currentQuestion?.id;
       if (!questionId) {
         throw new Error('No questionId found');
       }
@@ -140,9 +149,17 @@ export const quizControllerInit = async ({ quizView }: Options) => {
       state.activeQuestion.answered = true;
       quizView.disableQuizScreen();
     }
+
+    if (quiz.status === 'FINISHED') {
+      const video = await recorder.stop();
+      const url = URL.createObjectURL(video);
+
+      quizView.downloadFile(url, 'reaction.webm');
+      quizView.showReactionPlayer(url);
+    }
   });
 
-  quizView.onChoiceSelected(() => {
+  quizView.onChoiceSelected(async () => {
     state.activeQuestion.selected = true;
     quizView.enableActionButton(true);
   });

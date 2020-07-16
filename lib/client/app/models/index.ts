@@ -35,4 +35,5 @@ export interface QuizState {
   user: User;
   quiz: Quiz;
   activeQuestion: ActiveQuestion;
+  recording: boolean;
 }

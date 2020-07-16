@@ -27,6 +27,7 @@
     "uuid": "3.3.3"
   },
   "devDependencies": {
+    "@types/dom-mediacapture-record": "1.0.7",
     "@types/handlebars": "4.1.0",
     "@types/hapi__boom": "7.4.1",
     "@types/hapi__hapi": "18.2.5",

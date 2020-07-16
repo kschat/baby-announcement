@@ -127,6 +127,7 @@
 
 <div id="finish-screen" class="text-center d-none">
   <h1>KYLIE IS PREGNANT!</h1>
+  <video id="reaction-player" class="d-none" controls><video/>
 </div>
 
 <nav id="bottom-nav" class="navbar navbar-light fixed-bottom bg-light p-0 d-none">
@@ -150,6 +151,10 @@
 
       {{#if-equal quiz.status "IN_PROGRESS"}}
         <span id="action-button-text">Submit Answer</span>
+      {{/if-equal}}
+
+      {{#if-equal quiz.status "FINISHED"}}
+        <span id="action-button-text">Stop Recording &amp; Download Video</span>
       {{/if-equal}}
       <span class="oi oi-chevron-right"></span>
     </button>

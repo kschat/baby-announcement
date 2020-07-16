@@ -21,6 +21,7 @@ export const quizViewInit = () => {
   const $actionButtonText = $<HTMLSpanElement>($actionButton, '#action-button-text');
   const $playerList = $<HTMLUListElement>($bottomNav, '#player-list');
   const $finishContainer = $<HTMLDivElement>($root, '#finish-screen');
+  const $reactionPlayer = $<HTMLVideoElement>($finishContainer, '#reaction-player');
 
   const { initialStatus } = $questionListContainer.dataset;
   if (!initialStatus) {
@@ -38,6 +39,13 @@ export const quizViewInit = () => {
 
   const enableActionButton = (value: boolean) => {
     $actionButton.disabled = !value;
+  };
+
+  const downloadFile = (url: string, fileName: string) => {
+    const $tempAnchor = document.createElement('a');
+    $tempAnchor.href = url;
+    $tempAnchor.download = fileName;
+    $tempAnchor.click();
   };
 
   const showWaitingScreen = () => {
@@ -63,7 +71,12 @@ export const quizViewInit = () => {
   const showFinishScreen = () => {
     $spinner.classList.add('d-none');
     $header.classList.add('d-none');
-    $bottomNav.classList.add('d-none');
+
+    $actionButtonText.textContent = 'Stop Recording & Download Video';
+    $actionButton.classList.remove('d-none');
+    $actionButton.disabled = false;
+    $bottomNav.classList.remove('d-none');
+
     $questionListContainer.classList.add('d-none');
     $finishContainer.classList.remove('d-none');
   };
@@ -165,6 +178,11 @@ export const quizViewInit = () => {
     }
   };
 
+  const showReactionPlayer = (url: string) => {
+    $reactionPlayer.src = url;
+    $reactionPlayer.classList.remove('d-none');
+  };
+
   return {
     initialStatus,
     quizId,
@@ -174,11 +192,13 @@ export const quizViewInit = () => {
     showQuizScreen,
     showActionButton,
     enableActionButton,
+    downloadFile,
     updatePlayerList,
     getSelectedAnswer,
     resetQuizScreen,
     disableQuizScreen,
     enableQuestion,
+    showReactionPlayer,
 
     onActionButtonClick: (fn: () => void | Promise<void>) => {
       $actionButton.addEventListener('click', async () => {
