@@ -18,6 +18,8 @@ import { validateUser } from './auth';
 import { errorMapperExtension } from './extensions/error-response-mapper';
 import _ from 'lodash';
 
+const requireHttps = require('hapi-require-https');
+
 const CONFIG = {
   auth: {
     algorithm: 'HS256',
@@ -61,6 +63,7 @@ export type Config = Readonly<typeof CONFIG>;
     vision,
     inert,
     hapiAuthJwt2,
+    requireHttps,
   ]);
 
   server.views({
