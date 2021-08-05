@@ -22,7 +22,7 @@
     "@hapi/inert": "5.2.2",
     "@hapi/joi": "15.1.1",
     "@hapi/vision": "5.5.4",
-    "handlebars": "4.3.4",
+    "handlebars": "4.7.7",
     "hapi-auth-jwt2": "8.6.2",
     "hapi-require-https": "5.0.0",
     "joi-extract-type": "15.0.0",
