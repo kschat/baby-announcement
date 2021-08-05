@@ -60,23 +60,23 @@ export const QUESTIONS: Question[] = [
   {
     id: uuid(),
     status: 'NOT_ASKED',
-    text: 'Who was the worst president in history?',
+    text: 'What is the name for the Jewish New Year?',
     choices: [
       {
         id: uuid(),
-        text: 'Trump',
+        text: 'Hanukkah',
       },
       {
         id: uuid(),
-        text: 'Trump',
+        text: 'Yom Kippur',
       },
       {
         id: uuid(),
-        text: 'Trump',
+        text: 'Kwanza',
       },
       {
         id: uuid(),
-        text: 'Trump',
+        text: 'Rosh Hashanah',
       }
     ],
     answers: [],
@@ -84,23 +84,23 @@ export const QUESTIONS: Question[] = [
   {
     id: uuid(),
     status: 'NOT_ASKED',
-    text: 'How many times has Dad shit his pants?',
+    text: 'How many blue stripes are there on the U.S. flag?',
     choices: [
       {
         id: uuid(),
-        text: '100',
+        text: '6',
       },
       {
         id: uuid(),
-        text: '1,000',
+        text: '7',
       },
       {
         id: uuid(),
-        text: '2,134',
+        text: '13',
       },
       {
         id: uuid(),
-        text: 'Yes',
+        text: '27',
       }
     ],
     answers: [],
@@ -108,23 +108,23 @@ export const QUESTIONS: Question[] = [
   {
     id: uuid(),
     status: 'NOT_ASKED',
-    text: 'Does Casey have to study?',
+    text: 'Which planet is the hottest?',
     choices: [
       {
         id: uuid(),
-        text: 'Is water wet?',
+        text: 'Venus',
       },
       {
         id: uuid(),
-        text: 'Do bears shit in the woods?',
+        text: 'Saturn',
       },
       {
         id: uuid(),
-        text: `I don't have time to answer this, I have to study`,
+        text: 'Mercury',
       },
       {
         id: uuid(),
-        text: 'Yes',
+        text: 'Mars',
       }
     ],
     answers: [],
