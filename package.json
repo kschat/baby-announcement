@@ -26,7 +26,7 @@
     "hapi-auth-jwt2": "8.6.2",
     "hapi-require-https": "5.0.0",
     "joi-extract-type": "15.0.0",
-    "jsonwebtoken": "8.5.1",
+    "jsonwebtoken": "9.0.0",
     "lodash": "4.17.15",
     "shortid": "2.2.15",
     "source-map-support": "0.5.13",
